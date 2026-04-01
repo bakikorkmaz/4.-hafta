@@ -3,75 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baki Korkmaz | Veri Portfolyosu</title>
+    <title>Baki Korkmaz | Veri Bilimi Portfolyo</title>
     <style>
         :root {
             --primary: #00f2fe;
             --accent: #f093fb;
             --bg: #0b0b0d;
-            --card-bg: rgba(255, 255, 255, 0.07);
         }
 
         body {
             margin: 0;
             background-color: var(--bg);
             color: white;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             overflow-x: hidden;
         }
 
         #canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; text-align: center; position: relative; z-index: 1; }
 
-        /* Profil ve Şatafat */
         .profile-img {
-            width: 140px; height: 140px; border-radius: 50%;
+            width: 150px; height: 150px; border-radius: 50%;
             border: 4px solid var(--primary);
-            box-shadow: 0 0 25px var(--primary);
+            box-shadow: 0 0 30px var(--primary);
             margin-bottom: 15px;
             object-fit: cover;
         }
 
         h1 { 
-            font-size: 3rem; letter-spacing: 3px; margin: 10px 0;
+            font-size: 3.5rem; margin: 10px 0;
             background: linear-gradient(45deg, var(--primary), var(--accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
         }
 
-        /* Görselleştirme Alanı */
-        .viz-section {
-            background: var(--card-bg);
-            padding: 20px; border-radius: 20px;
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            padding: 25px; border-radius: 25px;
             margin: 30px 0; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .viz-img {
-            max-width: 100%; border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        /* Görselleştirme Tam Ekran Genişlik */
+        .viz-container img {
+            width: 100%; max-width: 800px; border-radius: 15px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary);
         }
 
-        /* CSV Tablo Alanı */
-        .table-container {
-            overflow-x: auto; margin-top: 20px;
-            background: rgba(0, 0, 0, 0.3); border-radius: 10px;
+        /* CSV Tablo Tasarımı */
+        .table-scroll {
+            overflow-x: auto; margin-top: 15px; border-radius: 10px;
+            max-height: 500px;
         }
 
-        table { width: 100%; border-collapse: collapse; color: #ddd; }
-        th, td { padding: 12px; border-bottom: 1px solid #333; text-align: left; }
-        th { background: var(--primary); color: #000; }
+        table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); }
+        th { background: var(--primary); color: #000; padding: 15px; position: sticky; top: 0; }
+        td { padding: 12px; border-bottom: 1px solid #333; text-align: left; }
+        tr:hover { background: rgba(0, 242, 254, 0.1); }
 
-        /* Butonlar */
-        .btn-box { margin: 40px 0; display: flex; justify-content: center; gap: 20px; }
-        .btn {
-            padding: 15px 35px; border-radius: 30px; border: none;
-            font-weight: bold; cursor: pointer; text-decoration: none;
-            transition: 0.3s; text-transform: uppercase;
+        .status-msg { color: var(--accent); font-style: italic; margin-bottom: 10px; }
+
+        .btn-renk {
+            display: inline-block; padding: 15px 40px; border-radius: 50px;
+            border: 2px solid var(--accent); color: var(--accent);
+            text-decoration: none; font-weight: bold; transition: 0.3s;
+            margin-top: 20px;
         }
-        .btn-grafik { background: var(--primary); color: #000; }
-        .btn-renk { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 242, 254, 0.6); }
-
+        .btn-renk:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
     </style>
 </head>
 <body>
@@ -79,48 +81,45 @@
 <canvas id="canvas"></canvas>
 
 <div class="container">
-    <img src="profil_resmin.jpg" alt="Baki Korkmaz" class="profile-img">
+    <img src="profil.jpg" alt="Baki Korkmaz" class="profile-img">
     <h1>BAKİ KORKMAZ</h1>
-    <p style="color: #888;">Data Science & Analytics Student</p>
+    <p style="color: #888; letter-spacing: 3px;">VERİ ANALİTİĞİ UYGULAMASI</p>
 
-    <div class="viz-section">
-        <h3>📊 Haftalık Veri Analizi Görseli</h3>
-        <img src="gorsellestirme_veri.png" alt="Görselleştirme Bekleniyor..." class="viz-img">
-        <p style="font-size: 0.8rem; margin-top: 10px;">Dosya: gorsellestirme_veri.png</p>
-    </div>
-
-    <div class="viz-section">
-        <h3>📂 CSV Veri İçeriği (veri.csv.csv)</h3>
-        <div class="table-container" id="csv-display">
-            <p>Veriler yükleniyor...</p>
+    <div class="section">
+        <h2 style="color: var(--primary);">📊 Veri Görselleştirme</h2>
+        <div class="viz-container">
+            <img src="gorsellestirme_veri.png" alt="Görselleştirme dosyası (gorsellestirme_veri.png) yüklenemedi.">
         </div>
     </div>
 
-    <div class="btn-box">
-        <button class="btn btn-grafik" onclick="alert('Grafik detayları yükleniyor...')">GRAFİK</button>
-        <a href="renk.html" class="btn btn-renk">RENK DÜNYASI</a>
+    <div class="section">
+        <h2 style="color: var(--primary);">📂 Canlı Veri Seti</h2>
+        <div id="status" class="status-msg">Veriler okunuyor...</div>
+        <div class="table-scroll" id="csv-table">
+            </div>
     </div>
+
+    <a href="renk.html" class="btn-renk">RENK DÜNYASI</a>
 </div>
 
 <script>
-    // 1. FARE TAKİP EFEKTİ (ŞATAFATLI)
+    // --- 1. FARE TAKİP EFEKTİ ---
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
     window.addEventListener('mousemove', (e) => {
-        for(let i=0; i<5; i++) particles.push(new Particle(e.x, e.y));
+        for(let i=0; i<3; i++) particles.push(new Particle(e.x, e.y));
     });
 
     class Particle {
         constructor(x, y) {
             this.x = x; this.y = y;
-            this.size = Math.random() * 6 + 1;
-            this.speedX = Math.random() * 3 - 1.5;
-            this.speedY = Math.random() * 3 - 1.5;
-            this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+            this.size = Math.random() * 5 + 1;
+            this.speedX = Math.random() * 2 - 1;
+            this.speedY = Math.random() * 2 - 1;
+            this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
         }
         update() {
             this.x += this.speedX; this.y += this.speedY;
@@ -142,29 +141,43 @@
     }
     animate();
 
-    // 2. CSV DOSYASINI OKUMA FONKSİYONU
-    async function loadCSV() {
+    // --- 2. OTOMATİK CSV YÜKLEME ---
+    async function autoLoadCSV() {
+        const status = document.getElementById('status');
         try {
-            const response = await fetch('veri.csv.csv'); // Dosya adın tam olarak bu
-            const data = await response.text();
-            const rows = data.split('\n').slice(0, 10); // İlk 10 satırı göster
+            // Dosya adın tam olarak bu olmalı: veri.csv.csv
+            const response = await fetch('veri.csv.csv');
+            if (!response.ok) throw new Error('Dosya bulunamadı');
             
-            let tableHTML = '<table>';
-            rows.forEach((row, index) => {
-                const columns = row.split(',');
+            const data = await response.text();
+            const rows = data.split('\n');
+            let tableHTML = '<table><thead><tr>';
+            
+            // Başlıklar
+            const headers = rows[0].split(',');
+            headers.forEach(h => tableHTML += `<th>${h}</th>`);
+            tableHTML += '</tr></thead><tbody>';
+
+            // Veriler
+            for (let i = 1; i < rows.length; i++) {
+                if(rows[i].trim() === "") continue;
+                const cols = rows[i].split(',');
                 tableHTML += '<tr>';
-                columns.forEach(col => {
-                    tableHTML += index === 0 ? `<th>${col}</th>` : `<td>${col}</td>`;
-                });
+                cols.forEach(c => tableHTML += `<td>${c}</td>`);
                 tableHTML += '</tr>';
-            });
-            tableHTML += '</table>';
-            document.getElementById('csv-display').innerHTML = tableHTML;
+            }
+            
+            tableHTML += '</tbody></table>';
+            document.getElementById('csv-table').innerHTML = tableHTML;
+            status.innerHTML = "✅ Veri akışı sağlandı.";
         } catch (err) {
-            document.getElementById('csv-display').innerHTML = "Veri dosyası (veri.csv.csv) bulunamadı. Lütfen klasöre ekleyin.";
+            status.innerHTML = "❌ Hata: 'veri.csv.csv' dosyasına doğrudan erişilemiyor. Lütfen dosyayı bir sunucuda (Live Server gibi) açın veya 'Dosya Seç' yöntemine geri dönün.";
+            console.error(err);
         }
     }
-    loadCSV();
+
+    // Uygulama açılır açılmaz çalıştır
+    window.onload = autoLoadCSV;
 </script>
 
 </body>
